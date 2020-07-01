@@ -1,6 +1,7 @@
 package pl.edu.agh.mwo.kw;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class Report {
 
@@ -41,6 +42,17 @@ public class Report {
         this.workingHours = workingHours;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Report report = (Report) o;
+        return date.equals(report.date) &&
+                project.equals(report.project);
+    }
 
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(date, project);
+    }
 }
