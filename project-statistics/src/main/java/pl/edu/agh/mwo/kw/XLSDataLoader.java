@@ -99,18 +99,4 @@ public class XLSDataLoader implements DataLoader{
         return reports;
     }
 
-    private static boolean isRowEmpty(Row row) {
-        boolean isEmpty = true;
-        DataFormatter dataFormatter = new DataFormatter();
-
-        if (row != null) {
-            for (Cell cell : row) {
-                if (dataFormatter.formatCellValue(cell).trim().length() > 0) {
-                    isEmpty = false;
-                    break;
-                }
-            }
-        }
-        return isEmpty;
-    }
 }

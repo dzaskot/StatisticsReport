@@ -1,6 +1,8 @@
 package pl.edu.agh.mwo.kw;
 
+import java.time.format.TextStyle;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,22 +25,14 @@ public class RankingOfMonths implements RankingGenerator{
 
     private Map<String, Double> generateRanking(Set<Employee> employees) {
         Map<String, Double> monthsMap = new HashMap<>();
+
         employees.forEach(employee -> employee.getReports().forEach(report -> {
-            String monthInYear = report.getDate().getMonth() + " " + report.getDate().getYear();
+            String monthInYear = report.getDate().getMonth().getDisplayName(TextStyle.FULL_STANDALONE, new Locale("pl")) + " " + report.getDate().getYear();
             if(!monthsMap.containsKey(monthInYear))
                 monthsMap.put(monthInYear, report.getWorkingHours());
             else
                 monthsMap.put(monthInYear,monthsMap.get(monthInYear) + report.getWorkingHours());
         }));
-//        for(Employee employee: employees){
-//            for(Report report: employee.getReports()){
-//                String monthInYear = report.getDate().getMonth() + " " + report.getDate().getYear();
-//                if(!monthsMap.containsKey(monthInYear))
-//                    monthsMap.put(monthInYear, report.getWorkingHours());
-//                else
-//                    monthsMap.put(monthInYear,monthsMap.get(monthInYear) + report.getWorkingHours());
-//            }
-//        }
         return monthsMap;
     }
 }

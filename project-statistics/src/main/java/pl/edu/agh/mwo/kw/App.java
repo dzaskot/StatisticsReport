@@ -52,7 +52,7 @@ public class App
 //                    );
 //                });
 
-                RankingGenerator generator1 = new RankingOfMonths(employees);
+                RankingGenerator generator1 = new RankingOfWorkingDays(employees);
                 generator1.printRanking();
                 guard = false;
             }
