@@ -48,7 +48,8 @@ public class Report {
         if (o == null || getClass() != o.getClass()) return false;
         Report report = (Report) o;
         return date.equals(report.date) &&
-                project.equals(report.project);
+                project.equals(report.project) &&
+                task.equals(report.task);
     }
 
     @Override

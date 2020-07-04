@@ -11,23 +11,23 @@ import java.util.*;
 public class XLSDataLoader implements DataLoader{
 
     @Override
-    public HashSet<Employee> loadDataFromFiles(String folderPath) {
+    public Set<Employee> loadDataFromFiles(String folderPath) {
         List<File> files = loadFilesFromPath(folderPath);
-        Map<String, Employee> employees = new HashMap<>();
+        Map<String, Employee> employeesMap = new HashMap<>();
 
         for(File file: files){
             String name = FilenameUtils.removeExtension(file.getName());
-            HashSet<Report> reports = readXLSFile(file);
+            Set<Report> reports = readXLSFile(file);
 //            Optional<Employee> maybeEmployee = employees.stream()
 //                    .filter(employee -> employee.getName().equals(name))
 //                    .findAny();
 //            if(maybeEmployee.isPresent()){}
-            employees.computeIfAbsent(name, key ->
+            employeesMap.computeIfAbsent(name, key ->
                 new Employee(name))
                 .getReports().addAll(reports);
-
         }
-        return null;
+
+        return new HashSet<>(employeesMap.values());
     }
 
     private List<File> loadFilesFromPath(String folderPath){
@@ -46,8 +46,8 @@ public class XLSDataLoader implements DataLoader{
         return files;
     }
 
-    private HashSet<Report> readXLSFile(File file){
-        HashSet<Report> reports = new HashSet<>();
+    private Set<Report> readXLSFile(File file){
+        Set<Report> reports = new HashSet<>();
 
         try (InputStream xslStream = new FileInputStream(file)){
             Workbook workbook = WorkbookFactory.create(xslStream);
@@ -86,18 +86,31 @@ public class XLSDataLoader implements DataLoader{
                     Report report = new Report();
                     report.setProject(sheet.getSheetName());
                     report.setDate(date);
-                    //report.setTask(task);
+                    report.setTask(task);
                     report.setWorkingHours(workingHours);
                     reports.add(report);
                 }
                 workbook.close();
                 xslStream.close();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return reports;
+    }
+
+    private static boolean isRowEmpty(Row row) {
+        boolean isEmpty = true;
+        DataFormatter dataFormatter = new DataFormatter();
+
+        if (row != null) {
+            for (Cell cell : row) {
+                if (dataFormatter.formatCellValue(cell).trim().length() > 0) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+        }
+        return isEmpty;
     }
 }

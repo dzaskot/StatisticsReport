@@ -7,6 +7,7 @@ import org.apache.commons.cli.Options;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.Set;
 
 public class App
 {
@@ -41,7 +42,18 @@ public class App
             String path = new Scanner(System.in).nextLine();
             if(Files.exists(Paths.get(path))) {
                 DataLoader loader = new XLSDataLoader();
-                loader.loadDataFromFiles(path);
+                Set<Employee> employees = loader.loadDataFromFiles(path);
+//                employees.forEach(employee -> {
+//                    System.out.println(employee.getName());
+//                    employee.getReports().forEach(
+//                            report -> {
+//                                System.out.println(report.getProject() + " " + report.getDate() + " " + report.getWorkingHours());
+//                            }
+//                    );
+//                });
+
+                RankingGenerator generator1 = new RankingOfEmployees(employees);
+                generator1.printRanking();
                 guard = false;
             }
             else{

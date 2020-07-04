@@ -1,7 +1,7 @@
 package pl.edu.agh.mwo.kw;
 
-import java.util.HashSet;
+import java.util.Set;
 
 public interface DataLoader {
-    HashSet<Employee> loadDataFromFiles(String folderPath);
+    Set<Employee> loadDataFromFiles(String folderPath);
 }
