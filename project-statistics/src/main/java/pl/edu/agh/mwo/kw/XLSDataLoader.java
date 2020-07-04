@@ -52,17 +52,17 @@ public class XLSDataLoader implements DataLoader{
         try (InputStream xslStream = new FileInputStream(file)){
             Workbook workbook = WorkbookFactory.create(xslStream);
             for(Sheet sheet: workbook){
-                Iterator<Row> rowIterator = sheet.rowIterator();
-                rowIterator.next(); //skip first row
-                while(rowIterator.hasNext()){
-                    Row row = rowIterator.next();
+                // Iterator<Row> rowIterator = sheet.rowIterator();
+                // rowIterator.next(); //skip first row
+                for (Row row : sheet){
+                    if (row.getRowNum() == 0) continue;
                     Cell dataCell = row.getCell(0);
                     Cell hoursCell = row.getCell(2);
 
                     if(dataCell == null || hoursCell == null
                             || dataCell.getCellType() == CellType.BLANK
                             || hoursCell.getCellType() == CellType.BLANK){
-                        break;
+                        continue;
                     }
                     //DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
                     LocalDateTime date;
@@ -71,7 +71,7 @@ public class XLSDataLoader implements DataLoader{
                         //date = LocalDateTime.parse(row.getCell(0).getStringCellValue(), dateFormatter);
                     }
                     catch(DateTimeParseException ex) {
-                        break;
+                        continue;
                     }
 
                     String task = row.getCell(1).getStringCellValue();
@@ -81,7 +81,7 @@ public class XLSDataLoader implements DataLoader{
                         workingHours = row.getCell(2).getNumericCellValue();
                     }
                     catch(IllegalStateException | NumberFormatException ex){
-                        break;
+                        continue;
                     }
                     Report report = new Report();
                     report.setProject(sheet.getSheetName());

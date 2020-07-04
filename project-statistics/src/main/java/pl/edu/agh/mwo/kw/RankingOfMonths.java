@@ -23,15 +23,22 @@ public class RankingOfMonths implements RankingGenerator{
 
     private Map<String, Double> generateRanking(Set<Employee> employees) {
         Map<String, Double> monthsMap = new HashMap<>();
-        for(Employee employee: employees){
-            for(Report report: employee.getReports()){
-                String monthInYear = report.getDate().getMonth() + " " + report.getDate().getYear();
-                if(!monthsMap.containsKey(monthInYear))
-                    monthsMap.put(monthInYear, report.getWorkingHours());
-                else
-                    monthsMap.put(monthInYear,monthsMap.get(monthInYear) + report.getWorkingHours());
-            }
-        }
+        employees.forEach(employee -> employee.getReports().forEach(report -> {
+            String monthInYear = report.getDate().getMonth() + " " + report.getDate().getYear();
+            if(!monthsMap.containsKey(monthInYear))
+                monthsMap.put(monthInYear, report.getWorkingHours());
+            else
+                monthsMap.put(monthInYear,monthsMap.get(monthInYear) + report.getWorkingHours());
+        }));
+//        for(Employee employee: employees){
+//            for(Report report: employee.getReports()){
+//                String monthInYear = report.getDate().getMonth() + " " + report.getDate().getYear();
+//                if(!monthsMap.containsKey(monthInYear))
+//                    monthsMap.put(monthInYear, report.getWorkingHours());
+//                else
+//                    monthsMap.put(monthInYear,monthsMap.get(monthInYear) + report.getWorkingHours());
+//            }
+//        }
         return monthsMap;
     }
 }
