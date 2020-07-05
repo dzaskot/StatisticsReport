@@ -4,10 +4,11 @@ import java.time.format.TextStyle;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class RankingOfMonths implements RankingGenerator{
+public class RankingOfMonths extends RankingPrinter implements RankingGenerator{
     private Set<Employee> employees;
 
     public RankingOfMonths(Set<Employee> employees) {
+        super("Miesiąc");
         this.employees = employees;
     }
 
@@ -15,24 +16,14 @@ public class RankingOfMonths implements RankingGenerator{
     public void printRanking() {
         Map<String, Double> monthsRanking = generateRanking(employees);
         int maxMonthLength = monthsRanking.keySet().stream()
-                .max(Comparator.comparingInt(month -> month.length()))
+                .max(Comparator.comparingInt(String::length))
                 .get().length();
-        StringBuilder header = new StringBuilder().append("Lp. | miesiąc");
-        int spacesCount = (maxMonthLength > 7)? maxMonthLength - 7: 0;
-        for(int i = 0; i<= spacesCount; i++) header.append(" ");
-        header.append(" | ilość godzin");
-        System.out.println(header);
+        printRow("Lp", rankingElement, "ilość godzin", maxMonthLength);
         AtomicInteger lp = new AtomicInteger(1);
         monthsRanking.entrySet().stream()
                 .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
-                .forEach((month -> {
-                    StringBuilder rankingRow = new StringBuilder().append(lp).append(".  | ").append(month.getKey());
-                    int spacesMonth = (month.getKey().length() > 7)? maxMonthLength - month.getKey().length(): 0;
-                    for(int j=0; j<= spacesMonth; j++) rankingRow.append(" ");
-                    rankingRow.append(" | ").append(month.getValue());
-                    System.out.println(rankingRow);
-                    lp.getAndIncrement();
-                }));
+                .forEach((month ->
+                        printRow(lp + ".", month.getKey(), month.getValue().toString(), maxMonthLength)));
     }
 
     private Map<String, Double> generateRanking(Set<Employee> employees) {

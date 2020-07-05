@@ -52,8 +52,14 @@ public class App
 //                    );
 //                });
 
-                RankingGenerator generator1 = new RankingOfWorkingDays(employees);
+                RankingGenerator generator1 = new RankingOfMonths(employees);
                 generator1.printRanking();
+                System.out.println();
+                RankingGenerator generator2 = new RankingOfEmployees(employees);
+                generator2.printRanking();
+                System.out.println();
+                RankingGenerator generator3 = new RankingOfWorkingDays(employees);
+                generator3.printRanking();
                 guard = false;
             }
             else{
