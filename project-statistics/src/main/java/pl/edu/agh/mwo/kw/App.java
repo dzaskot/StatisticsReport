@@ -25,12 +25,14 @@ public class App
                 if (Files.exists(path)) {
                     DataLoader loader = new XLSDataLoader();
                     Set<Employee> employees = loader.loadDataFromFiles(path.toString());
+
                     if (employees.isEmpty()) {
                         System.out.println("ERROR: No *.xls files in selected folder. Try again.");
                         continue;
                     }
                     System.out.println("Select ranking type. -h for help.");
                     CommandLine cmd = generateCommandLine(options, new Scanner(System.in).nextLine().split(" "));
+
                     if (cmd.hasOption("help")) {
                         HelpFormatter formatter = new HelpFormatter();
                         formatter.printHelp("App", options);
@@ -39,29 +41,29 @@ public class App
                     }
                     if (cmd.hasOption("day")) {
                         System.out.println("=====TEN MOST BUSIEST DAY RANKING=====");
-                        RankingGenerator ranking1 = new RankingOfWorkingDays(employees);
+                        RankingExtractor ranking1 = new RankingOfWorkingDays(employees);
                         ranking1.printRanking();
                         System.out.println();
                     }
                     if (cmd.hasOption("month")) {
                         System.out.println("====MOST BUSIEST MONTH RANKING====");
-                        RankingGenerator ranking2 = new RankingOfMonths(employees);
+                        RankingExtractor ranking2 = new RankingOfMonths(employees);
                         ranking2.printRanking();
                         System.out.println();
                     }
                     if (cmd.hasOption("employee")) {
                         System.out.println("===MOST BUSIEST EMPLOYEE RANKING===");
-                        RankingGenerator ranking3 = new RankingOfEmployees(employees);
+                        RankingExtractor ranking3 = new RankingOfEmployees(employees);
                         ranking3.printRanking();
                         System.out.println();
                     }
                     guard = false;
                 } else {
-                    System.out.println("ERROR: Wrong path. Try again.");
+                    printError();
                 }
             }
             catch(InvalidPathException ex){
-                System.out.println("ERROR: Wrong path. Try again.");
+                printError();
             }
 
         }
@@ -72,7 +74,7 @@ public class App
         options.addOption("e", "employee", false, "Print employees by working hours in projects")
                 .addOption("m", "month", false, "Print ranking of working hours in months")
                 .addOption("d", "day", false, "Print ten the most busiest days ranking")
-                .addOption("p", "path", true, "Folder export path")
+                .addOption("x", "export", true, "Folder export path")
                 .addOption("h", "help", false, "Display help information");
         return options;
     }
@@ -93,5 +95,9 @@ public class App
             //System.out.println("Select -h for help.");
         }
         return commandLine;
+    }
+
+    private static void printError(){
+        System.out.println("ERROR: Wrong path. Try again.");
     }
 }

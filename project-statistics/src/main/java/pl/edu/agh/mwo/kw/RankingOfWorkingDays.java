@@ -1,5 +1,7 @@
 package pl.edu.agh.mwo.kw;
 
+import org.apache.poi.ss.usermodel.Workbook;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -8,7 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class RankingOfWorkingDays extends RankingPrinter implements RankingGenerator{
+public class RankingOfWorkingDays extends RankingPrinter implements RankingExtractor {
     private Set<Employee> employees;
 
     public RankingOfWorkingDays(Set<Employee> employees) {
@@ -36,6 +38,11 @@ public class RankingOfWorkingDays extends RankingPrinter implements RankingGener
                     printRow(lp+".", dayName, day.getValue().toString(), maxDayValue );
                     lp.getAndIncrement();
                 }));
+    }
+
+    @Override
+    public Workbook exportRanking(Workbook workbook) {
+        return null;
     }
 
     private Map<LocalDateTime, Double> generateRanking(Set<Employee> employees) {

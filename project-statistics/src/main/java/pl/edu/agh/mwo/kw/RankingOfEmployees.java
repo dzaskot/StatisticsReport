@@ -1,9 +1,14 @@
 package pl.edu.agh.mwo.kw;
 
-import java.util.*;
+import org.apache.poi.ss.usermodel.Workbook;
+
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RankingOfEmployees extends RankingPrinter implements RankingGenerator{
+public class RankingOfEmployees extends RankingPrinter implements RankingExtractor {
     private Set<Employee> employees;
 
     public RankingOfEmployees(Set<Employee> employees) {
@@ -26,6 +31,12 @@ public class RankingOfEmployees extends RankingPrinter implements RankingGenerat
             printRow(lp+".", name, entry.getValue().toString(), maxEmployeeNameLength);
             lp++;
         }
+    }
+
+    @Override
+    public Workbook exportRanking(Workbook workbook) {
+        Map<Employee, Double> employeeStatistics = generateRanking(employees);
+        return null;
     }
 
     private Map<Employee, Double> generateRanking(Set<Employee> employees) {
