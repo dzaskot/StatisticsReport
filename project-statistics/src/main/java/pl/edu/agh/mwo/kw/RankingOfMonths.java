@@ -7,13 +7,13 @@ import org.apache.poi.ss.usermodel.Row;
 
 import java.time.format.TextStyle;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class RankingOfMonths extends RankingPrinter implements Ranking {
     private final Map<String, Double> result;
 
     public RankingOfMonths(Set<Employee> employees) {
-        super("Miesiąc");
+        super("Month");
         this.result = generateRanking(employees);
     }
 
@@ -23,12 +23,12 @@ public class RankingOfMonths extends RankingPrinter implements Ranking {
                 .max(Comparator.comparingInt(String::length))
                 .get().length();
         System.out.println("====MOST BUSIEST MONTH RANKING====");
-        printRow("Lp", rankingElement, "ilość godzin", maxMonthLength);
-        AtomicInteger lp = new AtomicInteger(1);
-        result.entrySet().stream()
-                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
-                .forEach((month ->
-                        printRow(lp + ".", month.getKey(), month.getValue().toString(), maxMonthLength)));
+        printRow("Lp", rankingElement, "Working hours", maxMonthLength);
+        int lp = 1;
+        for(Map.Entry<String,Double> entry : result.entrySet() ){
+                        printRow(lp + ".", entry.getKey(), entry.getValue().toString(), maxMonthLength);
+                        lp++;
+                }
         System.out.println();
     }
 
@@ -62,6 +62,10 @@ public class RankingOfMonths extends RankingPrinter implements Ranking {
             else
                 monthsMap.put(monthInYear,monthsMap.get(monthInYear) + report.getWorkingHours());
         }));
-        return monthsMap;
+        return monthsMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 }

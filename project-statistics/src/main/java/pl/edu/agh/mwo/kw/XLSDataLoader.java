@@ -3,8 +3,11 @@ package pl.edu.agh.mwo.kw;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.ss.usermodel.*;
 
-import java.io.*;
-import java.time.LocalDateTime;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
@@ -63,9 +66,9 @@ public class XLSDataLoader implements DataLoader{
                         continue;
                     }
                     //DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-                    LocalDateTime date;
+                    LocalDate date;
                     try {
-                        date = row.getCell(0).getLocalDateTimeCellValue();
+                        date = row.getCell(0).getLocalDateTimeCellValue().toLocalDate();
                         //date = LocalDateTime.parse(row.getCell(0).getStringCellValue(), dateFormatter);
                     }
                     catch(DateTimeParseException ex) {

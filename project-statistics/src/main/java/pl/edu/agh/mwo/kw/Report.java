@@ -1,20 +1,20 @@
 package pl.edu.agh.mwo.kw;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Report {
 
-    private LocalDateTime date;
+    private LocalDate date;
     private String project;
     private String task;
     private double workingHours;
 
-    public LocalDateTime getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

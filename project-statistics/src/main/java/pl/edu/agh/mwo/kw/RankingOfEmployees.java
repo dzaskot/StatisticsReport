@@ -15,7 +15,7 @@ public class RankingOfEmployees extends RankingPrinter implements Ranking {
     private final Map<Employee, Double> result;
 
     public RankingOfEmployees(Set<Employee> employees) {
-        super("Pracownik");
+        super("Employee");
         this.result = generateRanking(employees);
     }
 
@@ -24,8 +24,8 @@ public class RankingOfEmployees extends RankingPrinter implements Ranking {
         int maxEmployeeNameLength = result.entrySet().stream()
                 .max(Comparator.comparingInt(employee -> employee.getKey().getName().length()))
                 .get().getKey().getName().length();
-        System.out.println("===MOST BUSIEST EMPLOYEE RANKING===");
-        printRow("Lp", rankingElement, "ilość godzin", maxEmployeeNameLength);
+        System.out.println("====MOST BUSIEST EMPLOYEE RANKING====");
+        printRow("Lp", rankingElement, "Working hours", maxEmployeeNameLength);
 
         int lp =1;
         for (Map.Entry<Employee,Double> entry : result.entrySet()) {
