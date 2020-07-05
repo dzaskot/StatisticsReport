@@ -1,17 +1,18 @@
 package pl.edu.agh.mwo.kw;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class RankingOfWorkingDays extends RankingPrinter implements Ranking {
     private final Map<LocalDateTime, Double> result;
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
     public RankingOfWorkingDays(Set<Employee> employees) {
         super("Dzień");
@@ -20,7 +21,7 @@ public class RankingOfWorkingDays extends RankingPrinter implements Ranking {
 
     @Override
     public void printRanking() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
         int maxDayValue = result.keySet().stream()
                 .max(Comparator.comparingInt(day -> day.format(dateTimeFormatter).length()))
                 .get().format(dateTimeFormatter).length();
@@ -28,23 +29,33 @@ public class RankingOfWorkingDays extends RankingPrinter implements Ranking {
         System.out.println("=====TEN MOST BUSIEST DAY RANKING=====");
         printRow("Lp", rankingElement, "ilość godzin", maxDayValue);
 
-        AtomicInteger lp = new AtomicInteger(1);
-        result.entrySet().stream()
-                .sorted(Map.Entry.comparingByKey())
-                .sorted(Map.Entry.<LocalDateTime, Double>comparingByValue().reversed())
-                .limit(10)
-                .forEach((day -> {
-                    String dayName = day.getKey().format(dateTimeFormatter);
-                    printRow(lp+".", dayName, day.getValue().toString(), maxDayValue );
-                    lp.getAndIncrement();
-                }));
-
+        int lp = 1;
+        for(Map.Entry<LocalDateTime,Double> entry : result.entrySet() ){
+                    String dayName = entry.getKey().format(dateTimeFormatter);
+                    printRow(lp+".", dayName, entry.getValue().toString(), maxDayValue );
+                    lp++;
+                }
         System.out.println();
     }
 
     @Override
     public HSSFWorkbook exportRanking(HSSFWorkbook workbook) {
-        return null;
+        String[] columns = {"Lp.", "Working Day", "Working hours"};
+        HSSFSheet daySheet = workbook.createSheet("Day Ranking");
+        Row headerRow = daySheet.createRow(0);
+        for (int i = 0; i < columns.length; i++) headerRow.createCell(i).setCellValue(columns[i]);
+        int lp = 1;
+        for (Map.Entry<LocalDateTime, Double> day : result.entrySet()) {
+            Row row = daySheet.createRow(lp);
+            Cell cellLp = row.createCell(0);
+            cellLp.setCellValue(lp);
+            Cell cellDay = row.createCell(1);
+            cellDay.setCellValue(day.getKey().format(dateTimeFormatter));
+            Cell cellHours = row.createCell(2);
+            cellHours.setCellValue(day.getValue());
+            lp++;
+        }
+        return workbook;
     }
 
     private Map<LocalDateTime, Double> generateRanking(Set<Employee> employees) {
@@ -59,6 +70,11 @@ public class RankingOfWorkingDays extends RankingPrinter implements Ranking {
                     }
                 }
         ));
-        return dayMap;
+        return dayMap.entrySet().stream()
+                .sorted(Map.Entry.comparingByKey())
+                .sorted(Map.Entry.<LocalDateTime, Double>comparingByValue().reversed())
+                .limit(10)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
     }
 }

@@ -1,6 +1,9 @@
 package pl.edu.agh.mwo.kw;
 
+import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -35,7 +38,22 @@ public class RankingOfEmployees extends RankingPrinter implements Ranking {
 
     @Override
     public HSSFWorkbook exportRanking(HSSFWorkbook workbook) {
-        return null;
+        String[] columns = {"Lp.", "Employee", "Working hours"};
+        HSSFSheet employeeSheet = workbook.createSheet("Employee Ranking");
+        Row headerRow = employeeSheet.createRow(0);
+        for(int i=0; i<columns.length; i++) headerRow.createCell(i).setCellValue(columns[i]);
+        int lp =1;
+        for (Map.Entry<Employee, Double> employee: result.entrySet() ){
+            Row row = employeeSheet.createRow(lp);
+            Cell cellLp = row.createCell(0);
+            cellLp.setCellValue(lp);
+            Cell cellEmployee = row.createCell(1);
+            cellEmployee.setCellValue(employee.getKey().getName().replace("_", " "));
+            Cell cellHours = row.createCell(2);
+            cellHours.setCellValue(employee.getValue());
+            lp++;
+        }
+        return workbook;
     }
 
     private Map<Employee, Double> generateRanking(Set<Employee> employees) {

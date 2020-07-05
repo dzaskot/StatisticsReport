@@ -26,7 +26,10 @@ public class App
                 if (Files.exists(path)) {
                     System.out.println("Select ranking type. -h for help.");
                     CommandLine cmd = generateCommandLine(options, new Scanner(System.in).nextLine().split(" "));
-
+                    if(cmd==null) {
+                        System.out.println("Incorrect options. Try again.");
+                        continue;
+                    }
                     List<Ranking> rankings = new LinkedList<>();
 
                     DataLoader loader = new XLSDataLoader();
@@ -129,7 +132,7 @@ public class App
             System.out.println("Excel file Rankings.xls written successfully.");
 
         } catch (IOException e) {
-
+            System.out.println("Excel file writing failed.");
         }
     }
 }

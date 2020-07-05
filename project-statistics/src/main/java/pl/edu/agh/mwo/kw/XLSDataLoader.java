@@ -16,15 +16,13 @@ public class XLSDataLoader implements DataLoader{
         Map<String, Employee> employeesMap = new HashMap<>();
 
         for(File file: files){
-            String name = FilenameUtils.removeExtension(file.getName());
-            Set<Report> reports = readXLSFile(file);
-//            Optional<Employee> maybeEmployee = employees.stream()
-//                    .filter(employee -> employee.getName().equals(name))
-//                    .findAny();
-//            if(maybeEmployee.isPresent()){}
-            employeesMap.computeIfAbsent(name, key ->
-                new Employee(name))
-                .getReports().addAll(reports);
+            if(file.length() != 0) {
+                String name = FilenameUtils.removeExtension(file.getName());
+                Set<Report> reports = readXLSFile(file);
+                employeesMap.computeIfAbsent(name, key ->
+                        new Employee(name))
+                        .getReports().addAll(reports);
+            }
         }
 
         return new HashSet<>(employeesMap.values());
