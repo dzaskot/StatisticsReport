@@ -1,6 +1,6 @@
 package pl.edu.agh.mwo.kw;
 
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -8,34 +8,33 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RankingOfEmployees extends RankingPrinter implements RankingExtractor {
-    private Set<Employee> employees;
+public class RankingOfEmployees extends RankingPrinter implements Ranking {
+    private final Map<Employee, Double> result;
 
     public RankingOfEmployees(Set<Employee> employees) {
         super("Pracownik");
-        this.employees = employees;
+        this.result = generateRanking(employees);
     }
 
     @Override
     public void printRanking() {
-        Map<Employee, Double> employeeStatistics = generateRanking(employees);
-
-        int maxEmployeeNameLength = employees.stream()
-                .max(Comparator.comparingInt(employee -> employee.getName().length()))
-                .get().getName().length();
+        int maxEmployeeNameLength = result.entrySet().stream()
+                .max(Comparator.comparingInt(employee -> employee.getKey().getName().length()))
+                .get().getKey().getName().length();
+        System.out.println("===MOST BUSIEST EMPLOYEE RANKING===");
         printRow("Lp", rankingElement, "ilość godzin", maxEmployeeNameLength);
 
         int lp =1;
-        for (Map.Entry<Employee,Double> entry : employeeStatistics.entrySet()) {
+        for (Map.Entry<Employee,Double> entry : result.entrySet()) {
             String name = entry.getKey().getName().replace("_", " ");
             printRow(lp+".", name, entry.getValue().toString(), maxEmployeeNameLength);
             lp++;
         }
+        System.out.println();
     }
 
     @Override
-    public Workbook exportRanking(Workbook workbook) {
-        Map<Employee, Double> employeeStatistics = generateRanking(employees);
+    public HSSFWorkbook exportRanking(HSSFWorkbook workbook) {
         return null;
     }
 

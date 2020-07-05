@@ -1,6 +1,6 @@
 package pl.edu.agh.mwo.kw;
 
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,26 +10,26 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class RankingOfWorkingDays extends RankingPrinter implements RankingExtractor {
-    private Set<Employee> employees;
+public class RankingOfWorkingDays extends RankingPrinter implements Ranking {
+    private final Map<LocalDateTime, Double> result;
 
     public RankingOfWorkingDays(Set<Employee> employees) {
         super("Dzień");
-        this.employees = employees;
+        this.result = generateRanking(employees);
     }
 
     @Override
     public void printRanking() {
-        Map<LocalDateTime, Double> dayRanking = generateRanking(employees);
-
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        int maxDayValue = dayRanking.keySet().stream()
+        int maxDayValue = result.keySet().stream()
                 .max(Comparator.comparingInt(day -> day.format(dateTimeFormatter).length()))
                 .get().format(dateTimeFormatter).length();
+
+        System.out.println("=====TEN MOST BUSIEST DAY RANKING=====");
         printRow("Lp", rankingElement, "ilość godzin", maxDayValue);
 
         AtomicInteger lp = new AtomicInteger(1);
-        dayRanking.entrySet().stream()
+        result.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .sorted(Map.Entry.<LocalDateTime, Double>comparingByValue().reversed())
                 .limit(10)
@@ -38,10 +38,12 @@ public class RankingOfWorkingDays extends RankingPrinter implements RankingExtra
                     printRow(lp+".", dayName, day.getValue().toString(), maxDayValue );
                     lp.getAndIncrement();
                 }));
+
+        System.out.println();
     }
 
     @Override
-    public Workbook exportRanking(Workbook workbook) {
+    public HSSFWorkbook exportRanking(HSSFWorkbook workbook) {
         return null;
     }
 
