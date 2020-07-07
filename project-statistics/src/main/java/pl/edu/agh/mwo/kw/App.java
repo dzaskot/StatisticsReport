@@ -30,12 +30,12 @@ public class App
                 String inputPath = cmd.getOptionValue('i');
 
                 if(!cmd.hasOption('i')) {
-                    System.out.println("Missing required option: input");
+                    System.out.println("Missing required input option with correct path");
                     formatter.printHelp("statistics", options);
                     System.exit(1);
                 }
 
-                if(!cmd.hasOption('d') && !cmd.hasOption('e') && !cmd.hasOption('m')){
+                if((!cmd.hasOption('d') && !cmd.hasOption('e') && !cmd.hasOption('m'))){
                     System.out.println("Missing ranking type option");
                     formatter.printHelp("statistics", options);
                     System.exit(1);
@@ -46,7 +46,7 @@ public class App
                 Set<Employee> employees = loader.loadDataFromFiles(inputPath);
 
                 if (employees.isEmpty()) {
-                    System.out.println("ERROR: No *.xls files in selected folder. Try again.");
+                    System.out.println("ERROR: Incorrect path or no *.xls files in selected folder.");
                     System.exit(1);
                 }
                 if (cmd.hasOption("day")) {
@@ -168,6 +168,7 @@ public class App
         options.addOption(export);
         options.addOption("e", "employee", false, "Print employees by working hours in projects")
                 .addOption("m", "month", false, "Print ranking of working hours in months")
+                .addOption("h", "help", false, "Display help information")
                 .addOption("d", "day", false, "Print ten the most busiest days ranking");
         return options;
     }
