@@ -13,7 +13,8 @@ public class Utils {
         Employee employee2 = new Employee("employee2");
         Report report1 = new Report();
         report1.setProject("Projekt1");
-        report1.setDate(LocalDate.now());
+        report1.setDate(LocalDate.of(2020,
+                Month.JULY, 7));
         report1.setTask("testing1");
         report1.setWorkingHours(10);
         Report report2 = new Report();
@@ -26,7 +27,8 @@ public class Utils {
         employee1.getReports().add(report2);
         Report report3 = new Report();
         report3.setProject("Projekt1");
-        report3.setDate(LocalDate.now());
+        report3.setDate(LocalDate.of(2020,
+                Month.JULY, 7));
         report3.setTask("testing3");
         report3.setWorkingHours(4.5);
         employee2.getReports().add(report3);

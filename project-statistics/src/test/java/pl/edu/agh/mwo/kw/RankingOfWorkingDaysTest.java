@@ -23,7 +23,7 @@ public class RankingOfWorkingDaysTest {
         assertEquals(
                 "=====TEN MOST BUSIEST DAY RANKING=====" + System.lineSeparator() +
                         "Lp  | Day            | Working hours" + System.lineSeparator() +
-                        "1.  | 05 lipca 2020  | 14.5" +  System.lineSeparator() +
+                        "1.  | 07 lipca 2020  | 14.5" +  System.lineSeparator() +
                         "2.  | 05 maja 2020   | 10.0" +  System.lineSeparator() +
                         System.lineSeparator(),
                 allWrittenLines
