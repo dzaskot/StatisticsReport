@@ -65,7 +65,7 @@ public class App
                     try {
                         Path exportPathWithFileName = Paths.get(cmd.getOptionValue("x"));
                         Path exportPath = exportPathWithFileName.getRoot();
-                        if (Files.isDirectory(exportPath) && Files.isWritable(exportPath)) {
+                        if (Files.isWritable(exportPath)) {
                             HSSFWorkbook workbook = new HSSFWorkbook();
                             for (Ranking ranking : rankings) {
                                 workbook = ranking.exportRanking(workbook);
@@ -78,7 +78,7 @@ public class App
                         }
                     }
                     catch (InvalidPathException ex) {
-                        printError();
+                        System.out.println(ex.getMessage());
                         System.exit(1);
                     }
                 }
@@ -117,7 +117,7 @@ public class App
                     new FileOutputStream(new File(path));
             workbook.write(out);
             out.close();
-            System.out.println("Excel file Rankings.xls written successfully.");
+            System.out.println("Excel file written successfully.");
 
         } catch (IOException e) {
             System.out.println("Excel file writing failed.");
