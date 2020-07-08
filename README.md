@@ -1,10 +1,10 @@
 # project-statistics
 Console program to calculate project statistics.
 
-User runs the program with the option input and following it - the path to the folder with the data.
-User needs to determine which of the options (m, d, e - see the usage below) of ranking should be printed to the console.
-By choosing export option with the following path (with name of the file ex. c:\Rancings.xls" we will get the xls file exported,
-where the selected statistics will be exported to separated sheet - named according to the name of ranking.
+User runs the program with the mandatory option input (i) next with the path to the folder with the data.
+User needs to determine also - which of the options (m, d, e - see the usage below) of ranking should be printed to the console.
+By choosing export option next with the following path (with name of the file ex. d:\Rancings.xls we will get the xls file exported,
+where the selected statistics will be saved in separated sheet - named according to the name of ranking.
 
 
 usage:
