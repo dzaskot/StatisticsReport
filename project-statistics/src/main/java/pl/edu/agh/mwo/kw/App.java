@@ -63,22 +63,23 @@ public class App
 
                 if(cmd.hasOption("export") && !cmd.getOptionValue("x").isEmpty()) {
                     try {
-                        Path exportPath = Paths.get(cmd.getOptionValue("x"));
+                        Path exportPathWithFileName = Paths.get(cmd.getOptionValue("x"));
+                        Path exportPath = exportPathWithFileName.getRoot();
                         if (Files.isDirectory(exportPath) && Files.isWritable(exportPath)) {
                             HSSFWorkbook workbook = new HSSFWorkbook();
                             for (Ranking ranking : rankings) {
                                 workbook = ranking.exportRanking(workbook);
                             }
-                            writeXLS(workbook, exportPath + "\\Rankings.xls");
+                            writeXLS(workbook, exportPathWithFileName.toString());
                             }
                         else {
                             printError();
-                            continue;
+                            System.exit(1);
                         }
                     }
                     catch (InvalidPathException ex) {
                         printError();
-                        continue;
+                        System.exit(1);
                     }
                 }
                 guard = false;
